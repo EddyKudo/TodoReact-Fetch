@@ -1,5 +1,31 @@
 @import "~bootstrap/scss/bootstrap.scss";
-
+body{
+    background-color: lightseagreen;
+}
+.todoBox{
+    width: 40%;
+    background-color:burlywood;
+    input{
+        font-size: 20px;
+        width: 70%;
+        border: 0;
+        margin: 3px;
+    }
+}
+.todoList{
+    list-style-type: none;
+    padding: 2px;
+}
+.todoLine{
+    font-size: 18px;
+    background-color: whitesmoke;
+    margin-top: 1px;
+    opacity: 0.6;
+    border-radius: 5px;
+    &:hover{
+        opacity: 1;
+    }
+}
 /* 
 
     You can write your own styles here...
