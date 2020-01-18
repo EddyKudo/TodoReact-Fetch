@@ -24,7 +24,7 @@ export default function TodoList() {
 			<h1>Task List</h1>
 			<form onSubmit={handleTodoUponEnter}>
 				<input
-					placeholder="New Task..."
+					placeholder=" New Task..."
 					onChange={handleNewTodoChange}
 				/>
 				<ul className="todoList">
