@@ -1,9 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 //create your first component
 export default function TodoList() {
 	const [newTodo, setNewTodo] = useState("");
-	const [todos, setTodos] = useState([{ id: 1, text: "build your life" }]);
+	const [todos, setTodos] = useState([]);
+	const api = "https://assets.breatheco.de/apis/fake/todos/user/eddykudo";
+	useEffect(() => {
+		syncAPI();
+	}, []);
+
+	function syncAPI() {
+		fetch(api)
+			.then(response => {
+				if (!response.ok) {
+					throw Error(response.text);
+				}
+
+				return response.json();
+			})
+			.then(data => {
+				setTodos(data);
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	}
 
 	function handleNewTodoChange(e) {
 		e.preventDefault();
@@ -12,11 +33,36 @@ export default function TodoList() {
 	function handleTodoUponEnter(e) {
 		e.preventDefault();
 		if (newTodo === "") return;
-		setTodos([...todos, { id: Date.now(), text: newTodo }]);
-		e.target.reset();
+
+		fetch(api, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify([...todos, { label: newTodo, done: false }])
+		})
+			.then(response => {
+				if (!response.ok) {
+					throw Error(response.text);
+				}
+
+				return response.json();
+			})
+			.then(data => {
+				// Resync our local component with API data
+				syncAPI();
+			})
+			.catch(error => {
+				console.error(error);
+			});
+
+		// reset current todo
+		setNewTodo("");
+		e.target.reset;
 	}
-	function removeTodo(id) {
-		setTodos(todos.filter(todo => todo.id != id));
+
+	function removeTodo(index) {
+		setTodos(todos.filter((todo, i) => i != index));
 	}
 
 	return (
@@ -28,12 +74,12 @@ export default function TodoList() {
 					onChange={handleNewTodoChange}
 				/>
 				<ul className="todoList">
-					{todos.map(todo => (
-						<li key={todo.id} className="todoLine">
-							{todo.text}
+					{todos.map((todo, index) => (
+						<li key={index} className="todoLine">
+							{todo.label}
 							<a
 								className="float-right mr-2"
-								onClick={() => removeTodo(todo.id)}>
+								onClick={() => removeTodo(index)}>
 								<i className="fas fa-eraser" />
 							</a>
 						</li>
