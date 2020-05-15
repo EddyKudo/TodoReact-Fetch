@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 //create your first component
 export default function TodoList() {
 	const [newTodo, setNewTodo] = useState("");
